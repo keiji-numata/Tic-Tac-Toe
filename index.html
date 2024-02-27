@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      .body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .square {
+        width: 100px;
+        height: 100px;
+        border: 1px solid black;
+        display: inline-block;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 50px;
+        line-height: 100px;     
+        font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;   
+      }
+
+      .square:hover {
+        background-color: gray;
+      }
+      .board {
+        width: 320px;
+      }
+      .turn {
+        border: 2px solid black;
+        width: 320px;
+        height: 75px;
+        line-height: 75px;
+        text-align: center;
+        font-size: 25px;
+        font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      }
+      .h1 {
+        font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+        text-align: center;
+        width: 320px;
+      }
+      .win-condition {
+        border: 5px solid black;
+        width: 320px;
+        height: 75px;
+        line-height: 75px;
+        text-align: center;
+        font-size: 25px;
+        color: red;     
+        margin-top: 20px;  
+        font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif; 
+      }
+    </style>
+    <title>Tic Tac Toe</title>
+  </head>
+
+  <body>
+    <h1 class = "h1">TIC TAC TOE </h1>
+    <div class="board">
+        <script>
+            const NUM_SQUARES = 9;
+            for (i=0; i<NUM_SQUARES; i++)
+            {
+            id = "sq"+i;
+            document.write( "<div class='square' id='" + id + "' onclick='handleClick(" + i + ")'></div>" );
+            
+            }
+            
+            gameOver = false;
+            board = new Array(NUM_SQUARES).fill("-");
+            currPlayer = Math.random() < 0.5 ? 'X' : 'O';
+
+            function handleClick(id) {
+                if (gameOver === false) {
+                  console.log("hereeee");
+                    square = document.getElementById("sq" + id);
+                    if (square.textContent === "") {
+                        square.textContent = currPlayer;
+                        alert("square " + id);
+                        board[id] = currPlayer;
+                        currPlayer = currPlayer === 'X' ? 'O' : 'X';
+                        document.querySelector('.turn').textContent = `IT IS ${currPlayer}'s TURN`;
+                        
+                    } 
+                }
+                checkGame();
+            }
+
+            function startGame() {
+              gameOver = false;
+              for (i=0; i<NUM_SQUARES; i++)
+              {
+                board[i] = '-';
+                square = document.getElementById("sq" + i);
+                if (square.textContent !== "") {
+                  square.textContent = "";
+                }
+              }
+              
+              currPlayer = currPlayer === 'X' ? 'O' : 'X';
+              document.querySelector('.turn').textContent = `IT IS ${currPlayer}'s TURN`;
+              document.querySelector('.win-condition').textContent = "";
+            }
+
+            function checkGame() {
+                winConditions = [
+                    board[0] + board[1] + board[2], board[3] + board[4] + board[5], 
+                    board[6] + board[7] + board[8], board[0] + board[3] + board[6], 
+                    board[1] + board[4] + board[7], board[2] + board[5] + board[8], 
+                    board[0] + board[4] + board[8], board[2] + board[4] + board[6]  
+                ];
+                for (i = 0; i < 8; i++) {
+                    console.log(winConditions[i]);
+                    if (winConditions[i] === "XXX") {
+                        document.querySelector('.win-condition').textContent = "PLAYER X WON";
+                        gameOver = true;
+                        return;
+                    } else if (winConditions[i] === "OOO") {
+                        document.querySelector('.win-condition').textContent = "PLAYER O WON";
+                        gameOver = true;
+                        return;
+                    }
+                }
+                
+                stalemate = false;
+                emptyCount = 0;
+
+                for (i = 0; i < NUM_SQUARES; i++) {
+                    if (board[i] != "-") {
+                        emptyCount++;
+                    }
+                }
+                console.log(emptyCount);
+                if (emptyCount == 9) {
+                    stalemate = true;
+                }
+
+                if (stalemate == true) {
+                    document.querySelector('.win-condition').textContent = "STALEMATE";
+                    gameOver = true;
+                }
+            }
+          </script>
+    </div>
+    <div class="turn">IT IS 's TURN</div>
+    <div class="win-condition"></div>
+    <button onclick="startGame()">Start Game</button>
+  </body>
+</html>
